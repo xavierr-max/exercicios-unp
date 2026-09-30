@@ -1,0 +1,34 @@
+@page "/"
+@namespace CalMedAcad.Pwa.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <base href="~/" />
+
+    <title>Calculadora Acadêmica</title>
+
+    <link rel="stylesheet"
+          href="css/site.css" />
+
+    <link href="CalMedAcad.Pwa.styles.css"
+          rel="stylesheet" />
+</head>
+
+<body>
+
+    <component type="typeof(App)"
+               render-mode="ServerPrerendered" />
+
+    <script src="_framework/blazor.server.js"></script>
+
+</body>
+
+</html>

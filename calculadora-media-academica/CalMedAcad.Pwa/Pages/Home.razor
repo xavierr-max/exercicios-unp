@@ -1,0 +1,153 @@
+@page "/"
+
+@using CalMedAcad.Pwa.Models
+@using CalMedAcad.Pwa.Services
+
+@inject MediaApiService MediaApiService
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Calculadora Acadêmica</h1>
+
+        <p class="subtitle">
+            Informe as notas e a frequência do aluno.
+        </p>
+
+        <div class="form-grid">
+
+            <div class="field">
+                <label>Nota 1</label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.1"
+                    @bind="request.Nota1" />
+            </div>
+
+            <div class="field">
+                <label>Nota 2</label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.1"
+                    @bind="request.Nota2" />
+            </div>
+
+            <div class="field">
+                <label>Nota 3</label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.1"
+                    @bind="request.Nota3" />
+            </div>
+
+            <div class="field">
+                <label>Frequência (%)</label>
+
+                <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.1"
+                    @bind="request.Frequencia" />
+            </div>
+
+        </div>
+
+        <button @onclick="Calcular"
+                disabled="@carregando">
+
+            @if (carregando)
+            {
+                <span>Calculando...</span>
+            }
+            else
+            {
+                <span>Calcular situação</span>
+            }
+
+        </button>
+
+        @if (!string.IsNullOrWhiteSpace(erro))
+        {
+            <div class="erro">
+                @erro
+            </div>
+        }
+
+        @if (resultado is not null)
+        {
+            <div class="resultado">
+
+                <span class="resultado-label">
+                    Situação
+                </span>
+
+                <strong>
+                    @resultado.Situacao
+                </strong>
+
+                <div class="resultado-info">
+
+                    <span>
+                        Média:
+                        <b>@resultado.Media.ToString("0.00")</b>
+                    </span>
+
+                    <span>
+                        Frequência:
+                        <b>@resultado.Frequencia.ToString("0.##")%</b>
+                    </span>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+@code {
+
+    private CalculoMediaRequest request = new();
+
+    private CalculoMediaResponse? resultado;
+
+    private string? erro;
+
+    private bool carregando;
+
+    private async Task Calcular()
+    {
+        carregando = true;
+
+        erro = null;
+
+        resultado = null;
+
+        try
+        {
+            resultado =
+                await MediaApiService.CalcularAsync(request);
+        }
+        catch
+        {
+            erro =
+                "Não foi possível realizar o cálculo. Verifique os dados informados.";
+        }
+        finally
+        {
+            carregando = false;
+        }
+    }
+}
